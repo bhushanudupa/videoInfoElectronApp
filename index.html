@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1 id="appName">Video Info</h1>
+    <form>
+        <div>
+            <label style="font-weight: bold;">
+                Select a video
+            </label>
+            <br>
+            <input type="file" accept="video/*" />
+        </div>
+        <button type="submit">Get info</button>
+    </form>
+
+    <h1 id="result"></h1>
+    <script>
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+
+        document.querySelector('form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const { path } = document.querySelector('input').files[0];
+            ipcRenderer.send('video:submit', path);
+        });
+        ipcRenderer.on('video:metadata', (event, duration) => {
+            document.querySelector('#result').innerHTML = `Video is ${duration} seconds`;
+        });
+
+    </script>
+</body>
+
+</html>
